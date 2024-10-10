@@ -1,6 +1,6 @@
 import requests
 import base64
- import os
+import os
  def fetch_and_decode_base64(url):
     print(url)
     try:
