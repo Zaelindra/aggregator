@@ -1,8 +1,8 @@
 name: Collect
 on:
-  # executed once a week on Sundays at 00:00
+  # 每周一 00:00 执行一次
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "0 0,8,16 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -10,20 +10,19 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # time zone
+  # 时区设置
   TZ: Asia/Shanghai
 
-  # github access token
+  # GitHub访问令牌
   GIST_PAT: ${{ secrets.GIST_PAT }}
 
-  # github username and gist id, separated by '/'
+  # GitHub用户名和gist ID，用"/"分隔
   GIST_LINK: ${{ secrets.GIST_LINK }}
 
-  # the url to the list of airports that you maintain yourself
-  # each line include domain, coupon and invitation code, the domain must be included, and the latter two items are optional
+  # 自定义机场列表的URL
   CUSTOMIZE_LINK: ${{ secrets.CUSTOMIZE_LINK }}
 
-  # include special protocols, such as vless hysteria2 and hysteria
+  # 是否启用特殊协议，如vless hysteria2和hysteria
   ENABLE_SPECIAL_PROTOCOLS: ${{ vars.ENABLE_SPECIAL_PROTOCOLS }}
 
 jobs:
@@ -74,9 +73,25 @@ jobs:
           proxy_count=$(grep -oP 'found \K\d+(?= proxies)' collect_output.log)
           echo "代理数量: $proxy_count"
 
-          # 设置环境变量以便后续步骤可以访问
+          # 将代理数量和时间戳设置为环境变量，以便在后续步骤中访问
           echo "PROXY_COUNT=$proxy_count" >> $GITHUB_ENV
+          echo "TIMESTAMP=$(date)" >> $GITHUB_ENV
 
-      - name: Timestamp
-        run: date
-        
+      - name: Send Proxy Update with Image to Telegram
+        if: success()
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: |
+          # 获取随机图片 URL
+          image_url=$(curl -s https://api.miaomc.cn/image/get | jq -r .url)
+          
+          # 构建推送消息
+          message="代理更新成功！🚀\n\n- 找到的代理数量：*${{ env.PROXY_COUNT }}*\n- 更新时间：*${{ env.TIMESTAMP }}*\n- 推送状态：*成功* ✅"
+          
+          # 使用 curl 发送图文推送
+          curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendPhoto" \
+            -F chat_id="$CHAT_ID" \
+            -F photo="$image_url" \
+            -F caption="$message" \
+            -F parse_mode="Markdown"
