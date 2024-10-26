@@ -88,10 +88,10 @@ jobs:
           
           # 构建推送消息
           message="
-          更新成功！
-          🚀- 节点数量：${{ env.PROXY_COUNT }} 
-          - 更新时间：${{ env.TIMESTAMP }} 
-          - 更新状态：*成功* ✅"
+            更新成功！
+           🚀- 节点数量：${{ env.PROXY_COUNT }} 
+           🚀- 更新时间：${{ env.TIMESTAMP }} 
+           🚀- 更新状态：*成功* ✅"
           
           # 检查图片 URL 是否为空，如果有图片则发送图文推送，否则发送纯文本
           if [[ -z "$image_url" ]]; then
