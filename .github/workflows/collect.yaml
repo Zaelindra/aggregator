@@ -65,7 +65,7 @@ jobs:
           fi
 
       - name: Collect
-        run: python -u subscribe/collect.py --all --overwrite --skip
+        run: python -u subscribe/collect.py --all --overwrite --skip > collect_output.log
 
       - name: Timestamp
         run: date
@@ -73,8 +73,8 @@ jobs:
       - name: Parse Proxy Count
         id: parse_proxy_count
         run: |
-          # 从 Collect 步骤的日志中提取代理数量
-          proxy_count=$(python -u subscribe/collect.py --all --overwrite --skip 2>&1 | grep -oP 'found \K\d+(?= proxies)')
+          # 从日志文件中提取代理数量
+          proxy_count=$(grep -oP 'found \K\d+(?= proxies)' collect_output.log)
           echo "代理数量: $proxy_count"
 
           # 设置环境变量以便后续步骤可以访问
