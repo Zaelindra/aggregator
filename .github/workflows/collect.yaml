@@ -67,9 +67,6 @@ jobs:
       - name: Collect
         run: python -u subscribe/collect.py --all --overwrite --skip > collect_output.log
 
-      - name: Timestamp
-        run: date
-
       - name: Parse Proxy Count
         id: parse_proxy_count
         run: |
@@ -79,4 +76,7 @@ jobs:
 
           # 设置环境变量以便后续步骤可以访问
           echo "PROXY_COUNT=$proxy_count" >> $GITHUB_ENV
+
+      - name: Timestamp
+        run: date
         
