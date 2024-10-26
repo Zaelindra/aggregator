@@ -89,9 +89,19 @@ jobs:
           # 构建推送消息
           message="代理更新成功！🚀\n\n- 找到的代理数量：*${{ env.PROXY_COUNT }}*\n- 更新时间：*${{ env.TIMESTAMP }}*\n- 推送状态：*成功* ✅"
           
-          # 使用 curl 发送图文推送
-          curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendPhoto" \
-            -F chat_id="$CHAT_ID" \
-            -F photo="$image_url" \
-            -F caption="$message" \
-            -F parse_mode="Markdown"
+          # 检查图片 URL 是否为空，如果有图片则发送图文推送，否则发送纯文本
+          if [[ -z "$image_url" ]]; then
+            echo "图片 URL 为空，发送纯文本消息..."
+            curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+              -d chat_id="$CHAT_ID" \
+              -d text="$message" \
+              -d parse_mode="Markdown"
+          else
+            echo "获取的图片 URL: $image_url，发送图文消息..."
+            curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendPhoto" \
+              -F chat_id="$CHAT_ID" \
+              -F photo="$image_url" \
+              -F caption="$message" \
+              -F parse_mode="Markdown"
+          fi
+
