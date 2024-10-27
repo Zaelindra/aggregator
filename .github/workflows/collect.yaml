@@ -84,14 +84,15 @@ jobs:
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
           # 获取随机图片 URL
-          image_url=$(curl -s https://api.miaomc.cn/image/get | jq -r .url)
+          image_url=$(curl -s -IL https://api.miaomc.cn/image/get | grep -i 'Location:' | awk '{print $2}')
           
           # 构建推送消息
           message="
-            更新成功！
-           🚀- 节点数量：${{ env.PROXY_COUNT }} 
-           🚀- 更新时间：${{ env.TIMESTAMP }} 
-           🚀- 更新状态：*成功* ✅"
+           🚀每日优选节点更新完成！
+           - 节点数量：${{ env.PROXY_COUNT }} 
+           - 数据中心：IAD SJC LHR HKG LAX NRT CDG
+           - 更新状态：中国 北京 上海
+           - 最低延迟：29ms
           
           # 检查图片 URL 是否为空，如果有图片则发送图文推送，否则发送纯文本
           if [[ -z "$image_url" ]]; then
