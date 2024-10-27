@@ -90,8 +90,8 @@ jobs:
             message="
             🚀每日优选节点更新完成！
             - 节点数量：324 
-            - 数据中心：IAD SJC LHR HKG LAX NRT CDG
-            - 更新状态：中国 北京 上海
+            - 数据中心：IAD SJC LHR HKG LAX 
+            - 测速位置：中国 北京 上海
             - 最低延迟：29ms
             "
             
