@@ -83,30 +83,31 @@ jobs:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
         run: |
-          # 获取随机图片 URL
-          image_url=$(curl -s -IL https://api.miaomc.cn/image/get | grep -i 'Location:' | awk '{print $2}')
-          
-          # 构建推送消息
-          message="
-           🚀每日优选节点更新完成！
-           - 节点数量：${{ env.PROXY_COUNT }} 
-           - 数据中心：IAD SJC LHR HKG LAX NRT CDG
-           - 更新状态：中国 北京 上海
-           - 最低延迟：29ms
-          
-          # 检查图片 URL 是否为空，如果有图片则发送图文推送，否则发送纯文本
-          if [[ -z "$image_url" ]]; then
-            echo "图片 URL 为空，发送纯文本消息..."
-            curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-              -d chat_id="$CHAT_ID" \
-              -d text="$message" \
-              -d parse_mode="Markdown"
-          else
-            echo "获取的图片 URL: $image_url，发送图文消息..."
-            curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendPhoto" \
-              -F chat_id="$CHAT_ID" \
-              -F photo="$image_url" \
-              -F caption="$message" \
-              -F parse_mode="Markdown"
-          fi
+            # 获取随机图片 URL
+            image_url=$(curl -s -IL https://api.miaomc.cn/image/get | grep -i 'Location:' | awk '{print $2}')
+            
+            # 构建推送消息
+            message="
+            🚀每日优选节点更新完成！
+            - 节点数量：324 
+            - 数据中心：IAD SJC LHR HKG LAX NRT CDG
+            - 更新状态：中国 北京 上海
+            - 最低延迟：29ms
+            "
+            
+            # 检查图片 URL 是否为空，如果有图片则发送图文推送，否则发送纯文本
+            if [[ -z "$image_url" ]]; then
+              echo "图片 URL 为空，发送纯文本消息..."
+              curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+                -d chat_id="$CHAT_ID" \
+                -d text="$message" \
+                -d parse_mode="Markdown"
+            else
+              echo "获取的图片 URL: $image_url，发送图文消息..."
+              curl -s -X POST "https://api.telegram.org/bot$BOT_TOKEN/sendPhoto" \
+                -F chat_id="$CHAT_ID" \
+                -F photo="$image_url" \
+                -F caption="$message" \
+                -F parse_mode="Markdown"
+            fi
 
