@@ -89,7 +89,7 @@ jobs:
             # 构建推送消息
             message="
             🚀每日优选节点更新完成！
-            - 节点数量：324 
+            - 节点数量：${{ env.PROXY_COUNT }} 
             - 数据中心：IAD SJC LHR HKG LAX 
             - 测速位置：中国 北京 上海
             - 最低延迟：29ms
