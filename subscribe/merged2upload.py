@@ -12,8 +12,6 @@ import os
         print(f"Error fetching {url}: {e}")
         return None
  def upload_to_gist(content, gist_id, github_token):
-    gist_id = '2560fcfb9ba072be8537d91ff67db3ec'
-    github_token = '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'
     url = f"https://api.github.com/gists/{gist_id}"
     headers = {
         'Authorization': f'token {github_token}',
